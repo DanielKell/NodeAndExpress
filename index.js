@@ -1,4 +1,9 @@
-var express = require('express');
+var express = require('express'),
+    mongoose = require ('mongoose');
+
+var db = mongoose.connect('mongodb://localhost:/bookAPI');
+
+var Book = require('./models/bookModel');
 
 var app = express();
 
@@ -10,7 +15,13 @@ let bookRouter = express.Router();
 
 bookRouter.route('/Books')
     .get(function(request, response) {
-        var responseJson = {hello: "this is my api"};
+        Book.find(function(error, books) {
+            if (error) {
+                response.status(500).send(error);
+            } else {
+                response.json(books);
+            }
+        });
 
         response.json(responseJson);
     });
